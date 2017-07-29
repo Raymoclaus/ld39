@@ -8,10 +8,11 @@ public class LevelGenerator : MonoBehaviour
 	public int density;
 	public GameObject asteroid, star, battery;
 	public List<GameObject> listToDestroy = new List<GameObject>();
+	public Transform player;
 
 	void Start()
 	{
-		StartCoroutine(CreateField(asteroid, 1, false, 1f, false));
+		StartCoroutine(CreateField(asteroid, 1, false, 1f, false, 0f));
 	}
 
 	private void DestroyAll()
@@ -25,12 +26,12 @@ public class LevelGenerator : MonoBehaviour
 	public void CreateAll()
 	{
 		DestroyAll();
-		StartCoroutine(CreateField(asteroid, density, true, 1f, true));
-		StartCoroutine(CreateField(star, 5, true, 1f, true));
-		StartCoroutine(CreateField(battery, 1, true, 12f, true));
+		StartCoroutine(CreateField(asteroid, density, true, 1f, true, 0.96f));
+		StartCoroutine(CreateField(star, 5, true, 1f, true, 0.99f));
+		StartCoroutine(CreateField(battery, 1, true, 12f, true, 0.96f));
 	}
 
-	private IEnumerator CreateField(GameObject obj, int rounds, bool random, float reducer, bool addToList)
+	private IEnumerator CreateField(GameObject obj, int rounds, bool random, float reducer, bool addToList, float centerDispersion)
 	{
 		for (int i = 0; i < rounds; i++)
 		{
@@ -51,7 +52,7 @@ public class LevelGenerator : MonoBehaviour
 				float multiplier = size;
 				if (random)
 				{
-					float randomVal = Random.value * 0.95f + 0.05f;
+					float randomVal = Random.value * centerDispersion + (1f - centerDispersion);
 					multiplier *= randomVal;
 				}
 				pos *= multiplier;
@@ -60,5 +61,20 @@ public class LevelGenerator : MonoBehaviour
 			}
 			yield return 0;
 		}
+	}
+
+	public void RecreateBattery(Transform oldBattery)
+	{
+		float angle = Vector2.Angle(Vector2.up, player.position);
+		if (player.position.x < 0)
+		{
+			angle = 180f + (180f - angle);
+		}
+		angle += angle <= 180 ? 180 : -180;
+
+		Vector2 pos = new Vector2(Mathf.Sin(Mathf.Deg2Rad * angle), Mathf.Cos(Mathf.Deg2Rad * angle));
+		float multiplier = size * (Random.value * 0.96f + 0.04f);
+		pos *= multiplier;
+		oldBattery.transform.position = pos;
 	}
 }

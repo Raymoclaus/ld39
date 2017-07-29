@@ -5,9 +5,13 @@ using UnityEngine;
 public class BatteryCtrl : MonoBehaviour
 {
 	public BoxCollider2D col;
+	public GameObject sparkle;
+	public LevelGenerator levelGen;
 
 	void Start()
 	{
+		levelGen = FindObjectOfType<LevelGenerator>();
+
 		CheckCollisions();
 
 		FindObjectOfType<PlayerCtrl>().batteries.Add(this);
@@ -26,6 +30,11 @@ public class BatteryCtrl : MonoBehaviour
 
 	public void Collect()
 	{
-		Destroy(gameObject);
+		for (int i = 0; i < 20; i++)
+		{
+			GameObject sparkleClone = Instantiate(sparkle);
+			sparkleClone.transform.position = transform.position;
+		}
+		levelGen.RecreateBattery(transform);
 	}
 }
