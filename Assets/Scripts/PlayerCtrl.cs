@@ -165,6 +165,11 @@ public class PlayerCtrl : MonoBehaviour
 				music.Play();
 			}
 		}
+
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
 	}
 
 	private void UpdateDistanceTravelled()
@@ -259,6 +264,15 @@ public class PlayerCtrl : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape))
 		{
 			isPaused = !isPaused;
+			if (Input.GetKeyDown(KeyCode.Escape) && !isPaused)
+			{
+				gameState = 0;
+				SetRecord();
+				batteries.Clear();
+				levelGen.DestroyAll();
+				levelGen.CreateAll();
+				return;
+			}
 			visionBlock.transform.localScale = isPaused ? Vector3.one : Vector3.one * (vision / startingVision) * 100F;
 		}
 

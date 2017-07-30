@@ -26,7 +26,7 @@ public class LevelGenerator : MonoBehaviour
 	public void CreateAll()
 	{
 		StartCoroutine(CreateField(asteroid, density, true, 1f, true, 0.96f));
-		StartCoroutine(CreateField(star, 4, true, 1f, true, 0.98f));
+		StartCoroutine(CreateField(star, 6, true, 1f, true, 0.98f));
 		StartCoroutine(CreateField(battery, 1, true, 29f, true, 0.96f));
 		StartingBattery();
 	}
