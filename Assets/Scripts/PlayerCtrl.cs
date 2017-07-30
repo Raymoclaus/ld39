@@ -220,7 +220,7 @@ public class PlayerCtrl : MonoBehaviour
 		}
 
 		//draw vision circle
-		visionBlock.localScale = Vector3.MoveTowards(visionBlock.localScale, Vector3.one * (vision / startingVision) * 100F, Time.deltaTime * 80f);
+		visionBlock.localScale = Vector3.MoveTowards(visionBlock.localScale, Vector3.one * (vision / startingVision) * 200F, Time.deltaTime * 80f);
 		if (visionBlock.localScale.x < 1f)
 		{
 			visionBlock.localScale = Vector3.one;
@@ -273,7 +273,7 @@ public class PlayerCtrl : MonoBehaviour
 				levelGen.CreateAll();
 				return;
 			}
-			visionBlock.transform.localScale = isPaused ? Vector3.one : Vector3.one * (vision / startingVision) * 100F;
+			visionBlock.transform.localScale = isPaused ? Vector3.one : Vector3.one * (vision / startingVision) * 200F;
 		}
 
 		if (!isPaused)

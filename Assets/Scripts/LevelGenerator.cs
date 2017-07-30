@@ -12,7 +12,7 @@ public class LevelGenerator : MonoBehaviour
 
 	void Start()
 	{
-		StartCoroutine(CreateField(asteroid, 1, false, 1f, false, 0f));
+		StartCoroutine(CreateField(asteroid, 1, false, 0.5f, false, 0f));
 	}
 
 	public void DestroyAll()
@@ -27,7 +27,7 @@ public class LevelGenerator : MonoBehaviour
 	{
 		StartCoroutine(CreateField(asteroid, density, true, 1f, true, 0.96f));
 		StartCoroutine(CreateField(star, 6, true, 1f, true, 0.98f));
-		StartCoroutine(CreateField(battery, 1, true, 29f, true, 0.96f));
+		StartCoroutine(CreateField(battery, 1, true, 15f, true, 0.96f));
 		StartingBattery();
 	}
 
