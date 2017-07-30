@@ -31,13 +31,15 @@ public class PlayerCtrl : MonoBehaviour
 	public int batteryCount;
 	public List<BatteryCtrl> batteries = new List<BatteryCtrl>();
 	public float startingVision = 20;
-	private float vision;
+	public float vision;
 	public Transform visionBlock;
 
 	//animation stuff
 	public Transform spr;
 	private SpriteRenderer sprRend;
 	public Sprite[] sprites = new Sprite[3];
+	private float animTimer = 0f, animFinish = 0.05f;
+	private int currentFrame = 0;
 
 	//game state stuff
 	public bool isPaused;
@@ -82,6 +84,9 @@ public class PlayerCtrl : MonoBehaviour
 
 					//light mechanic
 					UpdateLight();
+
+					//animation
+					UpdateAnimation();
 				}
 
 				//check to see if you are picking up a battery
@@ -99,6 +104,31 @@ public class PlayerCtrl : MonoBehaviour
 				}
 				break;
 			}
+		}
+	}
+
+	private void UpdateAnimation()
+	{
+		if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)
+			|| Input.GetKey(KeyCode.PageUp) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.PageDown) || Input.GetKey(KeyCode.RightArrow))
+			&& !Reversing)
+		{
+			animTimer += Time.deltaTime;
+			if (animTimer >= animFinish)
+			{
+				animTimer -= animFinish;
+				currentFrame = -currentFrame + 1;
+			}
+
+			sprRend.sprite = sprites[2 + currentFrame];
+		}
+		else if (vSpeed != 0 || hSpeed != 0)
+		{
+			sprRend.sprite = sprites[1];
+		}
+		else
+		{
+			sprRend.sprite = sprites[0];
 		}
 	}
 
@@ -154,6 +184,7 @@ public class PlayerCtrl : MonoBehaviour
 	{
 		//reduce vision
 		vision -= Time.deltaTime * currentSpeed * 10f;
+		vision -= Time.deltaTime / 2f;
 
 		//use battery if run out of vision
 		if (vision <= 0)

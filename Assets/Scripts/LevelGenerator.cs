@@ -27,8 +27,8 @@ public class LevelGenerator : MonoBehaviour
 	{
 		DestroyAll();
 		StartCoroutine(CreateField(asteroid, density, true, 1f, true, 0.96f));
-		StartCoroutine(CreateField(star, 5, true, 1f, true, 0.99f));
-		StartCoroutine(CreateField(battery, 1, true, 12f, true, 0.96f));
+		StartCoroutine(CreateField(star, 5, true, 1f, true, 0.98f));
+		StartCoroutine(CreateField(battery, 1, true, 25f, true, 0.96f));
 	}
 
 	private IEnumerator CreateField(GameObject obj, int rounds, bool random, float reducer, bool addToList, float centerDispersion)
@@ -63,8 +63,11 @@ public class LevelGenerator : MonoBehaviour
 		}
 	}
 
-	public void RecreateBattery(Transform oldBattery)
+	public void RecreateBattery()
 	{
+		GameObject newBattery = Instantiate(battery, transform);
+		listToDestroy.Add(newBattery);
+
 		float angle = Vector2.Angle(Vector2.up, player.position);
 		if (player.position.x < 0)
 		{
@@ -75,6 +78,6 @@ public class LevelGenerator : MonoBehaviour
 		Vector2 pos = new Vector2(Mathf.Sin(Mathf.Deg2Rad * angle), Mathf.Cos(Mathf.Deg2Rad * angle));
 		float multiplier = size * (Random.value * 0.96f + 0.04f);
 		pos *= multiplier;
-		oldBattery.transform.position = pos;
+		newBattery.transform.position = pos;
 	}
 }

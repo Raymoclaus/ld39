@@ -35,6 +35,7 @@ public class BatteryCtrl : MonoBehaviour
 			GameObject sparkleClone = Instantiate(sparkle);
 			sparkleClone.transform.position = transform.position;
 		}
-		levelGen.RecreateBattery(transform);
+		levelGen.RecreateBattery();
+		Destroy(gameObject);
 	}
 }
