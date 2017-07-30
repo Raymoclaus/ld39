@@ -9,8 +9,6 @@ public class HudBatteries : MonoBehaviour
 	public GameObject battery;
 	public List<GameObject> batteries = new List<GameObject>();
 	private int batteryCount = 0;
-	private bool isActive;
-	private bool wasPaused;
 
 
 	void Start()
@@ -26,29 +24,7 @@ public class HudBatteries : MonoBehaviour
 			UpdateBatteryCount();
 		}
 
-		//hide the battery hud icons when not playing
-		//More efficient to write it like this so SetActivity isn't called every frame
-		if (player.gameState == 1 && !isActive)
-		{
-			isActive = true;
-			SetActivity(true);
-		}
-		if (player.gameState != 1 && isActive)
-		{
-			isActive = false;
-			SetActivity(false);
-		}
-
-		if (player.isPaused && !wasPaused)
-		{
-			wasPaused = true;
-			SetActivity(false);
-		}
-		if (!player.isPaused && wasPaused)
-		{
-			wasPaused = false;
-			SetActivity(true);
-		}
+		SetActivity(player.gameState == 1 && !player.isPaused);
 	}
 
 	private void UpdateBatteryCount()

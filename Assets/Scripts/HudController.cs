@@ -6,7 +6,7 @@ public class HudController : MonoBehaviour
 {
 	public PlayerCtrl player;
 	//HUD elements
-	public GameObject spaceToStart, controls, end, record, pause, spaceToContinue, PToContinue, EscToQuit;
+	public GameObject spaceToStart, controls, end, record, pause, spaceToContinue, PToContinue, EscToQuit, title;
 	private int state = -1;
 
 	void Update()
@@ -20,6 +20,7 @@ public class HudController : MonoBehaviour
 			controls.SetActive(state == 0);
 			end.SetActive(state == 2);
 			spaceToContinue.SetActive(state == 2);
+			title.SetActive(state == 0);
 		}
 
 		pause.SetActive(player.isPaused);
