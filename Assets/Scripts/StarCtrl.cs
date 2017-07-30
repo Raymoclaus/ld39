@@ -4,25 +4,11 @@ using UnityEngine;
 
 public class StarCtrl : MonoBehaviour
 {
-	public float size;
-	private float previousSize;
+	public Animator anim;
 
 	void Start()
 	{
-		size = Random.value + 1f;
-	}
-
-	void Update()
-	{
-		if (previousSize != size)
-		{
-			UpdateSize();
-			previousSize = size;
-		}
-	}
-
-	private void UpdateSize()
-	{
-		transform.localScale = Vector3.one * size;
+		transform.localScale = new Vector3(2f * Random.value + 1f, 2f * Random.value + 1f, 1f);
+		anim.speed = Random.value * 1f;
 	}
 }

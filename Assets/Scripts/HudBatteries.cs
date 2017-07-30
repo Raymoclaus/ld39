@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HudBatteries : MonoBehaviour
 {
@@ -57,13 +58,15 @@ public class HudBatteries : MonoBehaviour
 		{
 			if (batteryCount > batteries.Count)
 			{
-				batteries.Add(Instantiate(battery, transform));
+				GameObject newBattery = Instantiate(battery, transform);
+				newBattery.transform.localScale = Vector3.one;
+				batteries.Add(newBattery);
 			}
 			else if (batteries.Count > 0)
 			{
-				GameObject removedBattery = batteries[0];
+				GameObject removedBattery = batteries[batteries.Count - 1];
 				batteries.Remove(removedBattery);
-				Destroy(removedBattery);
+				StartCoroutine(Disappear(removedBattery));
 			}
 		}
 	}
@@ -74,5 +77,19 @@ public class HudBatteries : MonoBehaviour
 		{
 			battery.SetActive(activity);
 		}
+	}
+
+	public IEnumerator Disappear(GameObject obj)
+	{
+		float timer = 0f, finish = 1.5f;
+		Vector3 originalSize = obj.transform.localScale;
+
+		while (timer < finish)
+		{
+			timer += Time.deltaTime;
+			obj.transform.localScale = originalSize * (finish - timer) / finish;
+			yield return 0;
+		}
+		Destroy(obj);
 	}
 }

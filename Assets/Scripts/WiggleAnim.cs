@@ -64,6 +64,6 @@ public class WiggleAnim : MonoBehaviour
 
 	private void SetNewRandom()
 	{
-		finishTime = Random.Range(2f, 4f);
+		finishTime = Random.Range(3f, 6f);
 	}
 }

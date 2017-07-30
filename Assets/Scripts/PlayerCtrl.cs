@@ -40,6 +40,11 @@ public class PlayerCtrl : MonoBehaviour
 	public Sprite[] sprites = new Sprite[3];
 	private float animTimer = 0f, animFinish = 0.05f;
 	private int currentFrame = 0;
+	public EmberCtrl ember;
+
+	//sound stuff
+	public AudioSource music, externalSource, engineSource;
+	public AudioClip batteryCollect, chargeUp;
 
 	//game state stuff
 	public bool isPaused;
@@ -65,6 +70,7 @@ public class PlayerCtrl : MonoBehaviour
 			{
 				CheckMenuInput();
 				visionBlock.transform.localScale = Vector3.one;
+				engineSource.volume = 0f;
 				break;
 			}
 		//Gameplay mode
@@ -98,6 +104,7 @@ public class PlayerCtrl : MonoBehaviour
 		case 2:
 			{
 				visionBlock.transform.localScale = Vector3.one;
+				engineSource.volume = 0f;
 				if (Input.GetKeyDown(KeyCode.Space))
 				{
 					gameState = 0;
@@ -121,14 +128,17 @@ public class PlayerCtrl : MonoBehaviour
 			}
 
 			sprRend.sprite = sprites[2 + currentFrame];
+			engineSource.volume = Mathf.MoveTowards(engineSource.volume, 0.5f, Time.deltaTime);
 		}
 		else if (vSpeed != 0 || hSpeed != 0)
 		{
 			sprRend.sprite = sprites[1];
+			engineSource.volume = Mathf.MoveTowards(engineSource.volume, 0.2f, Time.deltaTime);
 		}
 		else
 		{
 			sprRend.sprite = sprites[0];
+			engineSource.volume = Mathf.MoveTowards(engineSource.volume, 0f, Time.deltaTime);
 		}
 	}
 
@@ -150,6 +160,10 @@ public class PlayerCtrl : MonoBehaviour
 			recordChecker.recordBeaten = false;
 			spr.transform.eulerAngles = Vector3.zero;
 			transform.position = Vector3.zero;
+			if (!music.isPlaying)
+			{
+				music.Play();
+			}
 		}
 	}
 
@@ -195,6 +209,7 @@ public class PlayerCtrl : MonoBehaviour
 				SetRecord();
 				gameState++;
 				batteries.Clear();
+				levelGen.DestroyAll();
 				levelGen.CreateAll();
 			}
 		}
@@ -218,6 +233,7 @@ public class PlayerCtrl : MonoBehaviour
 				batteryCount++;
 				batteryToRemove = battery;
 				batteryToRemove.Collect();
+				externalSource.PlayOneShot(batteryCollect);
 			}
 		}
 		if (batteryToRemove != null)
@@ -232,6 +248,7 @@ public class PlayerCtrl : MonoBehaviour
 		{
 			batteryCount--;
 			vision = startingVision;
+			externalSource.PlayOneShot(chargeUp);
 			return true;
 		}
 		return false;
@@ -247,25 +264,38 @@ public class PlayerCtrl : MonoBehaviour
 
 		if (!isPaused)
 		{
+			bool boosting = false;
 			//movement input
 			if (!Reversing)
 			{
 				if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
 				{
 					hSpeed -= Time.deltaTime * speedMplier;
+					boosting = true;
 				}
 				if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
 				{
 					hSpeed += Time.deltaTime * speedMplier;
+					boosting = true;
 				}
 			}
 			if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
 			{
 				vSpeed += Time.deltaTime * speedMplier;
+				boosting = true;
 			}
 			if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
 			{
 				vSpeed -= Time.deltaTime * speedMplier;
+				boosting = true;
+			}
+
+			if (boosting)
+			{
+				EmberCtrl em = Instantiate(ember.gameObject).GetComponent<EmberCtrl>();
+				em.transform.position = transform.position;
+				em.direction.x = -hSpeed;
+				em.direction.y = -vSpeed;
 			}
 
 			//rotation control
@@ -295,7 +325,10 @@ public class PlayerCtrl : MonoBehaviour
 			//use a battery
 			if (Input.GetKeyDown(KeyCode.Space))
 			{
-				UseBattery();
+				if (vision < startingVision / 2f)
+				{
+					UseBattery();
+				}
 			}
 		}
 	}

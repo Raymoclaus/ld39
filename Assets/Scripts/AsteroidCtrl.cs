@@ -10,6 +10,7 @@ public class AsteroidCtrl : MonoBehaviour
 
 	void Start()
 	{
+		transform.localScale = Vector3.one * (Random.value + 1f);
 		rotation = Random.value * speedRange - speedRange / 2f;
 		UpdateSprite();
 	}
